@@ -53,7 +53,7 @@ async function getData(city) {
     }
     const data = await response.json();
     // console.log(data);
-    if (!data.results || data.results.lenght === 0) {
+    if (!data.results || data.results.length === 0) {
       messageErreur.textContent = "Ville introuvable !"
       return
     }
@@ -176,7 +176,10 @@ async function getData(city) {
     ville.textContent = `${city}`
     ville.classList.add("text-2xl", "font-bold", "text-center")
     card.appendChild(ville)
-    const weather = WEATHER_CODES[weatherCode]
+    const weather = WEATHER_CODES[weatherCode] || {
+      icon: "🌡️",
+      label: "Donnée indisponible"
+    };
     const description = document.createElement("p")
     description.textContent = `${weather.icon}  ${weather.label}`
     description.classList.add("text-lg", "mt-3")
