@@ -41,6 +41,8 @@ const messageErreur = document.getElementById("message-erreur")
 const loading = document.getElementById("loading")
 const card = document.getElementById("Weather-card")
 const forecastWeatre = document.getElementById("forecast-weather")
+const Btn= document.getElementById("btn")
+let lastCity=""
 
 // console.log(card);
 
@@ -51,6 +53,7 @@ async function getData(city) {
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
+   
     const data = await response.json();
     // console.log(data);
     if (!data.results || data.results.length === 0) {
@@ -68,6 +71,8 @@ async function getData(city) {
     if (!weatherResponse.ok) {
       throw new Error(`Weather status:${weatherResponse.status}`)
     }
+    //============Test temporaire===============================
+// throw new Error("Weather status: 500");
 
     const weatherData = await weatherResponse.json()
     console.log(weatherData.daily);
@@ -100,7 +105,7 @@ async function getData(city) {
       const forecastCard = document.createElement("div");
 
       forecastCard.classList.add(
-        "bg-white",
+        "bg-blue-300",
         "rounded-2xl",
         "shadow-lg",
         "p-5",
@@ -116,8 +121,9 @@ async function getData(city) {
         label: "Donnée indisponible"
       };
       const description = document.createElement("p")
+
       description.textContent = `${weather.icon}  ${weather.label}`
-      description.classList.add("text-lg", "mt-3")
+      description.classList.add("text-lg", "mt-3");
       forecastCard.appendChild(description)
       const date = document.createElement("p")
       date.textContent = `Day:${day.dateFormatted}`
@@ -145,21 +151,6 @@ async function getData(city) {
       forecastWeatre.appendChild(forecastCard)
 
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     //Meteo actuelle
@@ -209,6 +200,17 @@ async function getData(city) {
 
   } catch (err) {
     console.error(err.message);
+    if(err.message.includes("429")){
+      messageErreur.textContent =
+  "Limite de requêtes atteinte. Réessayez plus tard"
+      
+    }else if (err.message.includes("fetch")){
+      messageErreur.textContent="Problème de connexion. Vérifiez votre réseau."
+    }
+    else{
+      messageErreur.textContent="Le service météo est indisponible. Réessayez plus tard"
+    }
+    Btn.hidden=false
   }
   finally {
     loading.hidden = true
@@ -223,8 +225,16 @@ form.addEventListener("submit", function (event) {
     messageErreur.textContent = "entrer un ville"
     return
   }
+  lastCity=cityName
   messageErreur.textContent = ""
+  Btn.hidden=true
   loading.hidden = false
   getData(cityName)
 
+})
+Btn.addEventListener("click",function(){
+  messageErreur.textContent=""
+  Btn.hidden=true
+  loading.hidden=false
+  getData(lastCity)
 })
