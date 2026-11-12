@@ -57,6 +57,8 @@ async function getData(city) {
     const data = await response.json();
     // console.log(data);
     if (!data.results || data.results.length === 0) {
+        card.textContent = "";
+        forecastWeatre.textContent = "";
       messageErreur.textContent = "Ville introuvable !"
       return
     }
@@ -71,8 +73,9 @@ async function getData(city) {
     if (!weatherResponse.ok) {
       throw new Error(`Weather status:${weatherResponse.status}`)
     }
+    //throw new Error("Weather status: 429");
     //============Test temporaire===============================
-// throw new Error("Weather status: 500");
+//throw new Error("Weather status: 500");
 
     const weatherData = await weatherResponse.json()
     console.log(weatherData.daily);
@@ -105,7 +108,7 @@ async function getData(city) {
       const forecastCard = document.createElement("div");
 
       forecastCard.classList.add(
-        "bg-blue-300",
+        "bg-blue-100",
         "rounded-2xl",
         "shadow-lg",
         "p-5",
