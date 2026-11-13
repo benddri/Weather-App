@@ -108,7 +108,7 @@ async function getData(city) {
       const forecastCard = document.createElement("div");
 
       forecastCard.classList.add(
-        "bg-blue-100",
+        "bg-blue-300",
         "rounded-2xl",
         "shadow-lg",
         "p-5",
