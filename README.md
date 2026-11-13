@@ -1,65 +1,191 @@
 # 🌤️ Weather App
 
+## Présentation
+
 Weather App est une application web qui permet de consulter la météo actuelle et les prévisions météorologiques d'une ville à partir de son nom.
 
-Le projet utilise l'API **Open-Meteo** pour récupérer et afficher les données météorologiques.
+Le projet utilise les API **Open-Meteo** pour récupérer les informations météorologiques.
 
-## ✅ Fonctionnalités
+## Fonctionnalités
 
 - Rechercher une ville par son nom.
 - Afficher la température actuelle.
-- Afficher le taux d'humidité.
-- Afficher la vitesse du vent.
+- Afficher l'humidité et la vitesse du vent.
 - Afficher les prévisions météorologiques sur 14 jours.
 - Afficher une description et une icône selon les conditions météorologiques.
-- Gérer les erreurs :
-  - Ville introuvable.
-  - Problème de connexion.
-  - Erreur API.
-- Réessayer la recherche après une erreur.
+- Gérer les erreurs de recherche et les problèmes de connexion.
+- Réessayer la dernière recherche grâce au bouton « Réessayer ».
 
-## 🛠️ Technologies utilisées
+## Technologies utilisées
 
 - HTML5
 - CSS3
 - Tailwind CSS
-- JavaScript (Vanilla JS)
+- JavaScript
 - Fetch API
-- Async / Await
 - Open-Meteo API
 
-## 🌐 API utilisées
+## Installation et lancement
 
-Le projet utilise deux API Open-Meteo :
-
-- **Geocoding API :** rechercher les coordonnées géographiques d'une ville à partir de son nom.
-- **Forecast API :** récupérer les données météorologiques actuelles et les prévisions sur 14 jours.
-
-**Documentation officielle :** https://open-meteo.com/
-
-## 🚀 Installation et lancement
-
-1. Cloner le projet :
+### 1. Cloner le projet
 
 ```bash
 git clone https://github.com/benddri/Weather-App.git
 ```
 
-2. Ouvrir le dossier du projet :
+### 2. Accéder au dossier
 
 ```bash
 cd Weather-App
 ```
 
-3. Ouvrir le projet dans Visual Studio Code.
+### 3. Lancer le projet
 
-4. Lancer le fichier `index.html` avec l'extension **Live Server**.
+Ouvrir le fichier `index.html` avec l'extension **Live Server** de VS Code.
 
-## 📚 Objectif pédagogique
+## Intégration des API
 
-Ce projet a pour objectif de pratiquer et d'améliorer les compétences en JavaScript, notamment :
+Le projet utilise deux API Open-Meteo.
 
-- La manipulation du DOM.
-- Les appels API avec Fetch.
-- La programmation asynchrone avec Async / Await.
-- La gestion des erreurs avec Try
+### 1. Geocoding API
+
+**Endpoint :**
+
+`https://geocoding-api.open-meteo.com/v1/search`
+
+**Paramètre utilisé :**
+
+- `name` : nom de la ville recherchée.
+
+Cette API permet de récupérer les coordonnées géographiques (latitude et longitude) d'une ville.
+
+### 2. Forecast API
+
+**Endpoint :**
+
+`https://api.open-meteo.com/v1/forecast`
+
+**Principaux paramètres utilisés :**
+
+| Paramètre | Description |
+|---|---|
+| `latitude` | Latitude de la ville |
+| `longitude` | Longitude de la ville |
+| `current` | Données météorologiques actuelles |
+| `daily` | Prévisions météorologiques quotidiennes |
+| `forecast_days` | Nombre de jours de prévisions (14) |
+| `wind_speed_unit` | Unité de vitesse du vent (km/h) |
+| `timezone` | Fuseau horaire automatique |
+
+## Limites de l'API
+
+Open-Meteo propose une utilisation gratuite pour les projets non commerciaux, sans clé API.
+
+Les limites annoncées pour l'offre gratuite sont notamment :
+
+- Moins de 10 000 appels par jour.
+- 5 000 appels par heure.
+- 600 appels par minute.
+
+Pour limiter les requêtes, l'application appelle les API uniquement lors d'une recherche ou d'une nouvelle tentative avec le bouton « Réessayer ».
+
+Consulter les conditions officielles : https://open-meteo.com/en/terms
+
+## Exemple de réponse JSON
+
+Voici un exemple simplifié de réponse de la Forecast API :
+
+```json
+{
+  "current": {
+    "temperature_2m": 23.4,
+    "relative_humidity_2m": 61,
+    "weather_code": 2,
+    "wind_speed_10m": 12.4
+  },
+  "daily": {
+    "time": ["2026-11-13"],
+    "temperature_2m_min": [16.6],
+    "temperature_2m_max": [22.7],
+    "weather_code": [45]
+  }
+}
+```
+
+### Affichage des données
+
+| Donnée JSON | Affichage dans l'application |
+|---|---|
+| `temperature_2m` | Température actuelle |
+| `relative_humidity_2m` | Humidité |
+| `wind_speed_10m` | Vitesse du vent |
+| `weather_code` | Description et icône météo |
+| `time` | Date des prévisions |
+| `temperature_2m_min` | Température minimale |
+| `temperature_2m_max` | Température maximale |
+
+Les données JSON sont récupérées avec `fetch()`, puis utilisées avec JavaScript pour afficher les informations météorologiques dans la page.
+
+## Gestion des erreurs
+
+L'application gère plusieurs situations :
+
+- Ville introuvable : affichage du message « Ville introuvable ! ».
+- Problème de connexion : affichage d'un message demandant de vérifier le réseau.
+- Erreur du service API : affichage d'un message indiquant que le service est indisponible.
+- Limite de requêtes atteinte : affichage d'un message adapté.
+- Bouton « Réessayer » : permet de relancer la dernière recherche.
+
+## Screenshots
+
+### Interface principale
+
+![Weather App - Interface principale](screenshots/weather-app.png)
+
+## Tests manuels
+
+Les tests de la gestion des erreurs sont documentés dans le fichier `TEST-LOG.md`.
+
+Les scénarios testés comprennent :
+
+- Recherche d'une ville inconnue.
+- Désactivation du réseau.
+- Simulation d'une erreur API 500.
+- Nouvelle tentative après rétablissement de la connexion.
+
+## Structure du projet
+
+```text
+Weather-App/
+│
+├── index.html
+├── README.md
+├── TEST-LOG.md
+│
+├── screenshots/
+│   └── weather-app.png
+│
+│
+└── js/
+    └── script.js
+```
+
+## Clé API
+
+Ce projet utilise Open-Meteo et ne nécessite aucune clé API.
+
+Aucune clé API n'est donc stockée dans le projet.
+
+## Auteur
+
+**Fatima Benddri**
+
+Projet réalisé dans le cadre de la formation Développement Web à YouCode Nador.
+
+## Sources
+
+- Documentation Forecast API : https://open-meteo.com/en/docs
+- Documentation Geocoding API : https://open-meteo.com/en/docs/geocoding-api
+- Conditions d'utilisation : https://open-meteo.com/en/terms
+
+Weather data provided by [Open-Meteo](https://open-meteo.com/).
